@@ -2,12 +2,12 @@
 import paho.mqtt.subscribe as subscribe
 import struct
 
-# Variabel for subsribe parameter and save data
-# hostname = "demo.thingsboard.io" # Using Thingsboard Live Demo Server
-# TOKEN = ... # Use the token from your Thingsboard Live Demo Server
-# PASS = ... # Usually empty if you use Thingsboard Live Demo Server
+# Variables for subsribe parameter and save data
+# hostname = "demo.thingsboard.io"      # Using Thingsboard Live Demo Server
+# TOKEN = ...                           # Use the token from your Thingsboard Live Demo Server
+# PASS = ...                            # Usually empty if you use Thingsboard Live Demo Server
 
-hostname = "127.0.0.1" # Using localhost
+hostname = "127.0.0.1"                  # Using localhost
 auth = {'username':TOKEN,'password':PASS}
 port = 1883
 topic = "v1/devices/me/telemetry"
