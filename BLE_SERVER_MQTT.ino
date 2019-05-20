@@ -1,11 +1,9 @@
 #include <BLEDevice.h>
-//#include <BLEUtils.h>
 #include <BLEServer.h>
 #include <ThingsBoard.h>
 
 #include <WiFi.h>
 #include <PubSubClient.h>
-
 
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
@@ -13,22 +11,23 @@
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+// Rain Intensity dataset
 int dataSet [] = {380,510,260,340,590,500,480,490,330,450,380,390,360,210,490,230,435,350,580,430,540,445,445,900,510,500,600,600,620,640,320,510,330,490,520,770,320,630,590,320,440,570,420,250,720,400,515,590,400,290,395,600};
+
 int idx = 0;
 int sizeArr = 0;
 
 long lastMsg = 0;
 char msg[50];
 int value = 0;
-const char* server = "192.168.43.252";
-const char* ssid = "Anonymous";
-const char* password = "whoami??";
-#define TB_SERVER     "demo.thingsboard.io"
-#define TB_PORT       1883
-#define TB_TOKEN      "4JjDZdXT0hIkvpgR5OwT"
-#define TB_TOPIC      "v1/devices/me/telemetry"
+const char* server = "";                          // Your BLE server address
+const char* ssid = "";                            // Your Access Point name
+const char* password = "";                        // Your Acces Point password
+#define TB_SERVER     "demo.thingsboard.io"       // Thingsboard Live Demo Server
+#define TB_PORT       1883                        // Default port
+#define TB_TOKEN      ""                          // Use the token from your Thingsboard Live Server
+#define TB_TOPIC      "v1/devices/me/telemetry"   // Default Thingsboard Live Demo Server topic
 ThingsBoard tb(espClient);
-
 
 BLEServer* myServer = nullptr;
 BLEService* myService = nullptr;
@@ -96,8 +95,6 @@ void setup() {
   sizeArr = sizeof(dataSet)/sizeof(dataSet[0]);
 
   setup_wifi();
-  //client.setServer(server,1883);
-  //client.setCallback(callback);
   makeServer();
   
 }
@@ -118,9 +115,7 @@ void loop() {
      Serial.println("=================================");
      Serial.println("Rain Intensity...");
   
-    //std::string value = myChar->getValue();
      Serial.print("MSG: ");
-    //    Serial.println(value.c_str());
      Serial.println(dataSet[idx]);
      idx++;
      if(idx==sizeArr){
@@ -129,20 +124,8 @@ void loop() {
     
    tb.sendTelemetryFloat("intensity", dataset[idx]);
   
-  
-
-   
-  
-  
   tb.loop();
   delay(2000);
-  
-  //String str= String(dataSet[idx]);
-  //char toSend [10];
-  //str.toCharArray(toSend,10);
-  //client.loop();
-  //client.publish("esp32/temp",toSend);
-  //delay(1000);
 }
 
 void callback(char* topic, byte* message, unsigned int length) {
