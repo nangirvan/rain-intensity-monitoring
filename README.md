@@ -1,4 +1,4 @@
-# Implementation of Rain Intensity Monitoring using ESP32 and Thingsboard
+# rain-intensity-monitoring
 
  There are 2 file :
  
