@@ -1,24 +1,22 @@
 #include <BLEDevice.h>
-//#include <BLEUtils.h>
 #include <BLEServer.h>
-
-
 #include <WiFi.h>
 #include <PubSubClient.h>
-
+#include <HTTPClient.h>
 
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
 WiFiClient espClient;
 PubSubClient client(espClient);
+HTTPClient http;
 
 long lastMsg = 0;
 char msg[50];
 int value = 0;
-const char* server = "192.168.1.66";
-const char* ssid = "A-21";
-const char* password = "secrean431038";
+const char* server = "192.168.1.66";      // Broker IP Address
+const char* ssid = "A-21";                // Access point name
+const char* password = "secrean431038";   // Access point password
 
 
 BLEServer* myServer = nullptr;
@@ -88,17 +86,12 @@ void setup() {
   client.setServer(server,1883);
   client.setCallback(callback);
   makeServer();
-  
 }
-
-
-
 
 void loop() {
   if (!client.connected()) {
     reconnect();
   }
-  
   
   // start working...
   Serial.println("=================================");
@@ -112,10 +105,27 @@ void loop() {
   char toSend [10];
   str.toCharArray(toSend,10);
   client.loop();
+  
+  // Publish data to thingsboard using mqtt
   client.publish("rain",toSend);
-  delay(1500);
+  
+  // POST data to thingsboard using HTTP if you can't connect to thingsboard using mqtt
+  String send_data = "{intensity:" + str + "}";
+  http.begin("https://demo.thingsboard.io/api/v1/4JjDZdXT0hIkvpgR5OwT/telemetry");  // Access token
+  http.addHeader("Content-Type", "application/json");
+  int httpResponseCode = http.POST(send_data);
+  if(httpResponseCode>0){
+    String response = http.getString();
+    Serial.println(httpResponseCode);
+    Serial.println(response);
+  } else {
+    Serial.print("Error on sending POST: ");
+    Serial.println(httpResponseCode);
+  }
+  http.end();
+  
+  delay(3000);
 }
-
 
 
 void callback(char* topic, byte* message, unsigned int length) {
