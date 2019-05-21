@@ -14,21 +14,23 @@
 #include <Wire.h>
 //#include "BLEScan.h"
 
-int pinDHT11 = 4;
+int pinDHT11 = 4;                   // ESP32 Pin Number
 SimpleDHT11 dht11(pinDHT11);
 WiFiClient espClient;
 PubSubClient client(espClient);
 
+// Rain Intensity Dataset
 int dataSet [] = {380,510,260,340,590,500,480,490,330,450,380,390,360,210,490,230,435,350,580,430,540,445,445,900,510,500,600,600,620,640,320,510,330,490,520,770,320,630,590,320,440,570,420,250,720,400,515,590,400,290,395,600};
+
 int idx = 0;
 int sizeArr = 0;
 
 long lastMsg = 0;
 char msg[50];
 int value = 0;
-const char* server = "192.168.1.66";
-const char* ssid = "A-21";
-const char* password = "secrean431038";
+const char* server = "192.168.1.66";      // BLE Server IP Address
+const char* ssid = "A-21";                // Access Point name
+const char* password = "secrean431038";   // Access Point Password
 
 // The remote service we wish to connect to.
 static BLEUUID serviceUUID("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
