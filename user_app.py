@@ -1,22 +1,30 @@
 # Import library
 import paho.mqtt.subscribe as subscribe
-import struct
 
-# Inisiasi variabel untuk subscribe dan menyimpan data
+# Variable initiation for subscribe and save data
+# If get data from thingsboard
 # hostname = "demo.thingsboard.io"
+# auth = {'username':"4JjDZdXT0hIkvpgR5OwT",'password':""}
+# topic = "v1/devices/me/telemetry"
+
+# If get data from localhost using mosquitto
 hostname = "127.0.0.1"
-auth = {'username':"4JjDZdXT0hIkvpgR5OwT",'password':""}
 port = 1883
-topic = "v1/devices/me/telemetry"
+topic = "rain"
 
 dataSet = []
 i = 0
 total_intensity = 0
 
-# Perulangan untuk mendapatkan data dan menghitung rata-ratanya
+# Loop to get and count data
 while True:
-        message = subscribe.simple(topic, hostname=hostname, port=port, auth=auth)
-        intensity = struct.unpack("i", message.payload)
+#         If subscribe topic from thingsboard
+#         message = subscribe.simple(topic, hostname=hostname, port=port, auth=auth)
+
+#         If subscribe topic from localhost using mosquitto
+        message = subscribe.simple(topic, hostname=hostname, port=port)
+        data = message.payload
+        intensity = int(data.decode())
         dataSet.append(intensity)
         print("Rain Intensity : %s" % intensity)
 
@@ -26,3 +34,4 @@ while True:
         print("Overall : %s" % overall_intensity)
         
         i+=1
+        
