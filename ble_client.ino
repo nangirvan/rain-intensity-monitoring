@@ -27,7 +27,7 @@ int sizeArr = 37;
 long lastMsg = 0;
 char msg[50];
 int value = 0;
-const char* server = "192.168.1.66";      // Broker IP Address
+const char* server = "192.168.1.66";      // BLE server IP Address
 const char* ssid = "A-21";                // Access point name
 const char* password = "secrean431038";   // Access point password
 
